@@ -189,7 +189,7 @@ function miniJoinManual(){let ip=$('miniJoinIp').value.trim();if(!ip){miniLanSta
 function miniJoin(ip){if(!window.NativeLan)return;miniLan=true;netMode=true;netRole='guest';miniSeat=2;miniLanStatus('در حال اتصال به '+ip+' …');window.NativeLan.join(ip)}
 function startMiniNetworkGame(role){miniLan=true;netMode=true;netRole=role;miniSeat=role==='host'?1:2;miniLanStatus('اتصال Wi‑Fi برقرار شد • '+(role==='host'?'میزبان':'مهمان')+' • منتظر همگام‌سازی بازی');}
 function miniCanMove(){if(!miniLan)return true;let s=miniState||{};switch(miniCurrentKind){case'chess':return s.turn===(miniSeat===1?'w':'b');case'connect':case'reversi':return s.turn===miniSeat;case'checkers':case'dots':return s.turn===(miniSeat===1?1:-1);case'ttt':return s.turn===(miniSeat===1?'X':'O');default:return true}}
-function miniSendState(){if(miniLan&&netMode&&netRole==='host'&&window.NativeLan&&miniCurrentKind&&miniState)window.NativeLan.send(JSON.stringify({kind:'mini-state',game:miniCurrentKind,state:miniState}))}
+function miniSendState(){if(miniLan&&netMode&&window.NativeLan&&miniCurrentKind&&miniState)window.NativeLan.send(JSON.stringify({kind:'mini-state',game:miniCurrentKind,state:miniState}))}
 function miniRenderState(){switch(miniCurrentKind){case'chess':chessDraw();break;case'connect':connectDraw();break;case'reversi':reversiDraw();break;case'checkers':checkersDraw();break;case'dots':dotsDraw();break;case'ttt':$('miniBox').innerHTML='<h3>دوز دونفره</h3><p id="miniMsg">نوبت '+miniState.turn+'</p><div class="ttt">'+miniState.board.map((v,i)=>'<button onclick="ttt('+i+')">'+(v||'')+'</button>').join('')+'</div>';break;}setMiniTheme(localStorage.getItem('nexora-mini-theme')||'royal')}
 const baseMini=window.mini;
 window.mini=function(kind){miniCurrentKind=kind;baseMini(kind);if(kind==='checkers'&&miniState.b){/* signed-piece rules */}setMiniTheme(localStorage.getItem('nexora-mini-theme')||'royal');if(miniLan&&netRole==='host')miniSendState();if(miniMusicActive){clearTimeout(miniMusicTimer);miniMusicStep=0;miniMusicTick()}};
@@ -202,7 +202,7 @@ window.checkersTap=guardMiniMove(window.checkersTap);
 window.dotsTap=guardMiniMove(window.dotsTap);
 const previousLanMessage=window.onLanMessage;
 window.onLanMessage=function(raw){let msg;try{msg=typeof raw==='string'?JSON.parse(raw):raw}catch(e){return}
- if(msg.kind==='mini-state'&&miniLan){miniCurrentKind=msg.game;miniState=msg.state;miniRenderState();miniLanStatus('حرکت حریف دریافت شد • اتصال محلی فعال');return}
+ if(msg.kind==='mini-state'&&miniLan){miniCurrentKind=msg.game;miniState=msg.state;miniRenderState();miniLanStatus('حرکت حریف دریافت شد • اتصال محلی فعال');if(netRole==='host'&&window.NativeLan)window.NativeLan.send(JSON.stringify({kind:'mini-state',game:miniCurrentKind,state:miniState}));return}
  if(msg.kind==='connected'&&miniLan){miniLanStatus('بازیکن دوم متصل شد • بازی دونفره شبکه‌ای آماده است');if(netRole==='host')miniSendState();return}
  if(previousLanMessage)previousLanMessage(raw)
 };
