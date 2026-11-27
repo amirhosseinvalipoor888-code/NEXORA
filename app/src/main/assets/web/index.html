@@ -119,4 +119,21 @@ function scanPlayers(){if(!window.NativeLan){$('foundPlayers').textContent='ای
 function manualJoin(){let ip=$('joinIp').value.trim();if(!ip)return $('hostStatus').textContent='IP میزبان را وارد کن.';if(window.NativeLan){netMode=true;netRole='guest';window.NativeLan.join(ip)}}
 function startNetworkGame(role){netMode=true;netRole=role;show('arena');newGame();$('netStatus').textContent='اتصال Wi‑Fi برقرار است.'}
 function statsNoop(){}
+
+(function paintArcadeIcons(){
+ const art={
+ 'شطرنج':'<path d="M19 48h26l-3-8H22l-3 8ZM25 37l2-17 5 5 5-5 2 17M32 7v9m-5-5h10" stroke="#F2C477" stroke-width="3" fill="none"/><path d="M17 51h30" stroke="#64E6DC" stroke-width="3"/>',
+ 'ریورسی (اتللو)':'<circle cx="32" cy="28" r="22" stroke="#F2C477" stroke-width="3" fill="none"/><circle cx="23" cy="21" r="9" fill="#f4eee0"/><circle cx="41" cy="21" r="9" fill="#20283a"/><circle cx="23" cy="39" r="9" fill="#20283a"/><circle cx="41" cy="39" r="9" fill="#f4eee0"/>',
+ 'چهار در خط':'<rect x="9" y="8" width="46" height="40" rx="7" stroke="#F2C477" stroke-width="3" fill="none"/><circle cx="20" cy="20" r="5" fill="#9D83FF"/><circle cx="32" cy="20" r="5" fill="#64E6DC"/><circle cx="44" cy="20" r="5" fill="#9D83FF"/><circle cx="20" cy="35" r="5" fill="#64E6DC"/><circle cx="32" cy="35" r="5" fill="#9D83FF"/><circle cx="44" cy="35" r="5" fill="#64E6DC"/>',
+ 'داما':'<circle cx="32" cy="28" r="22" stroke="#F2C477" stroke-width="3" fill="none"/><circle cx="23" cy="20" r="8" fill="#9D83FF"/><circle cx="41" cy="20" r="8" fill="#64E6DC"/><circle cx="23" cy="38" r="8" fill="#64E6DC"/><circle cx="41" cy="38" r="8" fill="#9D83FF"/>',
+ 'نقطه و خط':'<path d="M12 12h40v32H12z" stroke="#F2C477" stroke-width="2" fill="none"/>'+[0,1,2,3].map(x=>[0,1,2].map(y=>'<circle cx="'+(16+x*10)+'" cy="'+(16+y*12)+'" r="3" fill="'+(x%2?'#64E6DC':'#9D83FF')+'"/>').join('')).join(''),
+ 'دوز دونفره':'<path d="M22 10l20 36M42 10L22 46" stroke="#64E6DC" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="18" r="8" stroke="#F2C477" stroke-width="4" fill="none"/><circle cx="46" cy="40" r="8" stroke="#9D83FF" stroke-width="4" fill="none"/>',
+ 'حافظه تصویری':'<rect x="9" y="8" width="20" height="18" rx="4" stroke="#F2C477" stroke-width="3" fill="none"/><rect x="35" y="8" width="20" height="18" rx="4" stroke="#64E6DC" stroke-width="3" fill="none"/><rect x="9" y="32" width="20" height="17" rx="4" stroke="#9D83FF" stroke-width="3" fill="none"/><rect x="35" y="32" width="20" height="17" rx="4" stroke="#F2C477" stroke-width="3" fill="none"/>',
+ 'مسابقه اطلاعات عمومی':'<path d="M32 6l7 15 17 2-13 11 4 17-15-9-15 9 4-17L8 23l17-2 7-15Z" stroke="#F2C477" stroke-width="3" fill="none"/><path d="M27 25c0-7 11-7 11 0 0 4-6 5-6 9" stroke="#64E6DC" stroke-width="3" fill="none"/>',
+ 'سرعت واکنش':'<path d="M36 5L14 32h15l-2 19 23-30H34l2-16Z" fill="#F2C477" stroke="#64E6DC" stroke-width="2"/>',
+ 'حدس عدد':'<circle cx="32" cy="28" r="22" stroke="#F2C477" stroke-width="3" fill="none"/><path d="M21 20h22M21 28h15M21 36h20" stroke="#64E6DC" stroke-width="3" stroke-linecap="round"/>',
+ 'چیستان':'<path d="M21 22c0-15 22-17 25-3 2 9-10 11-10 19" stroke="#F2C477" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="36" cy="46" r="3" fill="#64E6DC"/>'
+ };
+ document.querySelectorAll('.arcade-card').forEach(card=>{const b=card.querySelector('b'),s=card.querySelector('strong.game-icon');if(b&&s&&art[b.textContent.trim()])s.innerHTML='<svg viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">'+art[b.textContent.trim()]+'</svg>'});
+})();
 </script></body></html>
