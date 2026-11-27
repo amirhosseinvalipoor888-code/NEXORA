@@ -110,7 +110,7 @@ public class MainActivity extends Activity {
                 synchronized(this){peer=s;setupStreams(s);}
                 status("به میزبان متصل شدی.");
                 sendLine("{\"kind\":\"connected\",\"role\":\"guest\"}");
-                runOnUiThread(() -> webView.evaluateJavascript("startNetworkGame('guest')",null));
+                runOnUiThread(() -> webView.evaluateJavascript("if(window.miniLan){startMiniNetworkGame('guest')}else{startNetworkGame('guest')}",null));
             } catch(Exception e){status("اتصال برقرار نشد: "+e.getMessage());}
         },"nexora-connect").start();
     }
