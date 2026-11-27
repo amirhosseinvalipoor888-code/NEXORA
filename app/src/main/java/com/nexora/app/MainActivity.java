@@ -29,6 +29,21 @@ public class MainActivity extends Activity {
         });
     }
     private void status(String s) { js("onLanStatus", s); }
+    private String localIpv4() {
+        try {
+            java.util.Enumeration<NetworkInterface> nets=NetworkInterface.getNetworkInterfaces();
+            while(nets.hasMoreElements()) {
+                NetworkInterface ni=nets.nextElement();
+                if(!ni.isUp() || ni.isLoopback()) continue;
+                java.util.Enumeration<InetAddress> addrs=ni.getInetAddresses();
+                while(addrs.hasMoreElements()) {
+                    InetAddress a=addrs.nextElement();
+                    if(a instanceof Inet4Address && !a.isLoopbackAddress()) return a.getHostAddress();
+                }
+            }
+        } catch(Exception ignored) {}
+        return "IP در دسترس نیست";
+    }
 
     public class LanBridge {
         @JavascriptInterface public void host(String name) { startHost(name == null ? "NEXORA player" : name); }
