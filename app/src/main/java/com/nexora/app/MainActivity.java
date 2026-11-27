@@ -32,17 +32,24 @@ public class MainActivity extends Activity {
     private String localIpv4() {
         try {
             java.util.Enumeration<NetworkInterface> nets=NetworkInterface.getNetworkInterfaces();
+            String fallback=null;
             while(nets.hasMoreElements()) {
                 NetworkInterface ni=nets.nextElement();
                 if(!ni.isUp() || ni.isLoopback()) continue;
                 java.util.Enumeration<InetAddress> addrs=ni.getInetAddresses();
                 while(addrs.hasMoreElements()) {
                     InetAddress a=addrs.nextElement();
-                    if(a instanceof Inet4Address && !a.isLoopbackAddress()) return a.getHostAddress();
+                    if(a instanceof Inet4Address && !a.isLoopbackAddress()) {
+                        String ip=a.getHostAddress();
+                        String iface=ni.getName().toLowerCase(java.util.Locale.ROOT);
+                        if(iface.startsWith("wlan") || iface.contains("wifi")) return ip;
+                        if(fallback==null && !iface.startsWith("rmnet")) fallback=ip;
+                    }
                 }
             }
+            if(fallback!=null) return fallback;
         } catch(Exception ignored) {}
-        return "IP در دسترس نیست";
+        return "IP در دسترس نیست؛ Wi-Fi را بررسی کن";
     }
 
     public class LanBridge {
